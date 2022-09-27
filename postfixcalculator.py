@@ -15,33 +15,79 @@ Output: 계산 결과
 # 2. 곱셈, 나눗셈
 # 3. 덧셈, 뺄셈
 # 4. 연산자를 기준으로 왼쪽계산
+
+value = dict()
+
 """
 
-# expression = input("Enter an expression: ")
-test_expession = "* 2 3 + 4 5"
+
+test_expession = "* 2 3 + 4 5"          # wrong expression
 test_expession2 = "2 3 + 4 5 + 6 7"
 
-class Lexical_Anaylzer:     # 여기서 구현해야 하는 것은? 잘못 된 infix expession을 찾는 것.
+
+def lexical_analyzer(expression):
+    operator = ["+", "-", "*", "/", "(", ")"]
+    number = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
+    """input spec:
+    1. 공백이 아닌 값
+    2. 연산자나 피연산자가 포함되어야 함
+    3. 연산자나 피연산자가 아닌 문자는 허용하지 않음
+    4. 연산자가 연속으로 나와서는 안 됨
+    5. -, +가 아닌 연산자가 맨 앞에 나오면 안 됨 => 그냥 연산자는 앞에 등장할 수 없는 것으로 하자!
+    """
+    # 수식에 필요한 연산자들이 들어오지 않았을 때
+    while any(i in expression for i in number+operator) == False:
+        expression = (input("수식을 입력하세요: "))
+        if expression == "":
+            print("Please enter an expression")
+        elif any(i in expression for i in number+operator) == False or expression.endswith(tuple(operator)) == True:
+            print("Wrong expression!")
+        elif any(i in expression for i in operator) == False:
+            print("Please enter an operator!")
+        elif any(i in expression for i in number) == False:
+            print("Please enter a number!")
+        elif expression.startswith(("*", "/")):
+            raise ValueError("Wrong expression")
+
+    # 수식에 필요한 연산자들이 들어왔을 때
+    expression = expression.strip().replace(" ", "")
+    if expression.startswith("+"):
+        expression = expression[1:]
+    expression
+
+
+expression = input("Enter an expression: ")
+lexical_analyzer(expression)
+
+
+# class LexicalAnaylzer:     # 여기서 구현해야 하는 것은? 잘못 된 infix expession을 찾는 것.
+#     # 연산자가 나오는 것을 찾기
+#     def __init__(self, expression):
+#         self.expression = expression
+#         print("expression: ", self.expression)
+
+#     def check_expression(self):
+#         expression = self.expression.replace(" ", "")
+#         if expression.startswith(("*", "/")):
+#             raise ValueError("Wrong expression")
+
+#         return expression
+
+
+class Operate:
+    def __init__(self):
+        pass
+
+    def __repr__(self):
+        return self.operator
+
+
+class Operator(Operate):
+    def __init__(self, operator, operand1, operand2):
+        super().__init__()
+        self.operator = operator
+
+
+class PostfixCalculator:
     def __init__(self, expression):
         self.expression = expression
-
-    def check_expression(self):
-
-
-
-
-class Operand:
-    def __init__(self, num):
-        self.num = num
-
-class Operator:
-    def __init__(self, value):
-        self.value = value
-
-    def __str__(self):
-        self.add = "+"
-        self.sub = "-"
-        self.mul = "*"
-        self.div = "/"
-        self.lpar = "("
-        self.rpar = ")"
