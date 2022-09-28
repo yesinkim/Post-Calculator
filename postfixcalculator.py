@@ -6,7 +6,7 @@ Output: 계산 결과
 구현 해야 하는 것
 1. Lexical Analyzer?
 -> 입력을 어떻게 받지??? (input)
--> 입력받아서 연산자와 피연산자를 구별 (계속?)
+-> 입력받아서 연산자와 피연산자를 구별 (계속?)  # 여기를 수정했는데 풀 해볼거임!
 
 2. Postfix Calculator
 -> 입력 받은 식을 postfix로 변환 및 계산해서 output
