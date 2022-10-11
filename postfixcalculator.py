@@ -47,19 +47,6 @@ def lexical_analyzer(expression: str):
     4. 연산자가 연속으로 나와서는 안 됨
     5. -, +가 아닌 연산자가 맨 앞에 나오면 안 됨 => 그냥 연산자는 앞에 등장할 수 없는 것으로 하자!
     """
-    # 수식에 필요한 연산자들이 들어오지 않았을 때
-    if expression == "":
-        print("Please enter an expression")
-    elif any(i in expression for i in number+operator) == False and expression.endswith(tuple(operator)) == True:
-        print("Wrong expression!")
-    elif any(i in expression for i in operator) == False:
-        print("Please enter an operator!")
-    elif any(i in expression for i in number) == False:
-        print("Please enter a number!")
-    elif expression.startswith(("*", "/")):
-        raise ValueError("Wrong expression")
-    else:
-        pass
 
     # 수식에 필요한 연산자들이 들어왔을 때
     """
@@ -71,11 +58,6 @@ def lexical_analyzer(expression: str):
     expression = expression.strip().replace(" ", "")
     if expression.startswith("+"):
         expression = expression[1:]
-    
-    while "(" in expression:
-        left_parenthesis = expression.find("(")
-        right_parenthesis = expression.find(")")
-
 
 
 
@@ -105,17 +87,24 @@ class LexicalAnaylzer:     # 여기서 구현해야 하는 것은? 잘못 된 in
 
 
 class BaseToken:
-    def __init__(self):
+    def __init__(self, value):
+        self.value = value
         pass
 
     def __repr__(self):
-        return self.operator
+        return self.value
+
+    @classmethod
+    def is_valied(cls, value):
+        pass
 
 
 class Operator(BaseToken):
-    def __init__(self, operator):
+    def __init__(self, value):
         super().__init__()
-        self.operator = operator
+        self.value = value
+
+
 
 
 class Operand(BaseToken):
@@ -125,5 +114,17 @@ class Operand(BaseToken):
 
 
 class PostfixCalculator:
+    """식을 입력받고 계산하는 method"""
     def __init__(self, expression):
         self.expression = expression
+
+    def __repr__(self):
+        return self.expression
+
+    def tokenize(self):
+        pass
+
+    def calculate(self):
+        pass
+
+
