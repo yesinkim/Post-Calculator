@@ -15,15 +15,26 @@ class Operator(Base):
     def __init__(self, value):
         super().__init__(value)
         
+    def __add__(self, other):
+        return self.value + other.value
+
+    def __sub__(self, other):
+        return self.value - other.value
     
-    @classmethod            # class method는 하나의 class 처럼 동작함
+    def __mul__(self, other):
+        return self.value * other.value
+
+    def __truediv__(self, other):
+        return self.value / other.value
+    
+    @classmethod
     def is_valid(cls, value):
         return value in "+-*/"
     
-    @classmethod
+    @classmethod        # class method는 하나의 class 처럼 동작함
     def check_priority(cls, value):
         priority = {'+':1, '-':1, '*':2, '/':2}
-        return priority[value]
+        return priority[str(value)]
 
 
 

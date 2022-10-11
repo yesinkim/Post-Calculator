@@ -22,10 +22,9 @@ class LexicalAnalyzer:
     """Find wrong expression and change expression to postfix"""
 
     def __init__(self):
-        self.expression = "54 - 3 * (1+2)"
-        # self.expression = input("Enter an expression: ").replace(" ", "")
+        # self.expression = "27 - 3 * (1+2)"        # temp test expression
+        self.expression = input("Enter an expression: ").replace(" ", "")
         self.check_expression()
-        self.to_postfix()
 
     def check_expression(self):
         expression = self.expression.replace(" ", "")
@@ -38,7 +37,7 @@ class LexicalAnalyzer:
         elif expression.startswith(("*", "/", "+", "-",")")) or expression.endswith(("*", "/", "+", "-","(")):
             raise ExpressionError("Wrong expression")
         elif expression.count("(") != expression.count(")") or expression.index("(") > expression.index(")"):       # ") 1 + 2 (" 같은 경우 걸러지지 않음
-            raise ExpressionError("Wrong expression")
+            raise ExpressionError("Parentheses error")
 
 
     def to_postfix(self):
@@ -47,25 +46,31 @@ class LexicalAnalyzer:
         expression = re.findall(r"[0-9.]+|[\+\-\*\/\(\)]", self.expression)
 
         for token in expression:
+            # 피연산자 일 때에는 postfix에 추가
             if Operand.is_valid(token):
                 postfix.append(Operand(token))
-            if Operator.is_valid(token):
-                postfix.append(Operator(token))
+            
+            # "("를 만나면 stack에 추가
             elif token == "(":
                 stack.append(token)
+            
+            # ")"를 만나면 stack에서 "("를 만날 때까지 pop
             elif token == ")":
                 while stack and stack[-1] != "(":
                     postfix.append(stack.pop())
+                # "("를 만나면 pop
                 stack.pop()
+            
+            # 연산자 일 때에는 stack에 추가
             else:
-                while stack and Operator.check_priority(token) <= Operator.check_priority(stack[-1]):
+                while stack and stack[-1]!='('and Operator.check_priority(token) <= Operator.check_priority(stack[-1]):
                     postfix.append(stack.pop())
-                stack.append(token)
+                stack.append(Operator(token))
             
         while stack:
             postfix.append(stack.pop())
         
-        print(postfix)
+        print(f"Postfix expression: {postfix}")
         return postfix
 
 
@@ -89,9 +94,7 @@ def Calculate(tokens):
 
 
 if __name__ == "__main__":
-    # expression = "2 + 3 * 5 - 79"
-    # expression = "54 - 3 * (1+2)"
     calc = LexicalAnalyzer()
-    # calc = PostFixCalculator()
-    calc.check_expression()
-    calc.to_postfix()
+    # calc.check_expression()
+    post_expression = calc.to_postfix()
+    print(Calculate(post_expression))
