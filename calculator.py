@@ -22,22 +22,33 @@ class LexicalAnalyzer:
     """Find wrong expression and change expression to postfix"""
 
     def __init__(self):
-        # self.expression = "27 - 3 * (1+2)"        # temp test expression
-        self.expression = input("Enter an expression: ").replace(" ", "")
+        # self.expression = "2.7 - 3 * (1+2)"        # temp test expression
+        # self.expression = "2+2 + 4"
+        self.expression = " 02 + 4 + 5"
+        # self.expression = input("Enter an expression: ").replace(" ", "")
         self.check_expression()
 
     def check_expression(self):
         expression = self.expression.replace(" ", "")
         pattern = re.compile("[^\d.\/\+\*\-\(\)]")
+        pattern2 = re.compile(r"([\+\-\*\/])\1+")
 
         if expression == "":
             raise ExpressionError("Empty expression")
         elif pattern.search(expression):
             raise ExpressionError("Unexpected character")
-        elif expression.startswith(("*", "/", "+", "-",")")) or expression.endswith(("*", "/", "+", "-","(")):
+        elif pattern2.search(expression):
+            raise ExpressionError("Overlap operator")
+        elif expression.startswith(("*", "/", "+", "-", ")")) or expression.endswith(("*", "/", "+", "-", "(")):
             raise ExpressionError("Wrong expression")
-        elif expression.count("(") != expression.count(")") or expression.index("(") > expression.index(")"):       # ") 1 + 2 (" 같은 경우 걸러지지 않음
+        elif expression.count("(") != expression.count(")") or expression.find("(") > expression.find(")"):       # ") 1 + 2 (" 같은 경우 걸러지지 않음
             raise ExpressionError("Parentheses error")
+
+    def delete_overlap(expression):
+        """Delete overlap operator"""
+        pattern = re.compile(r"([\+\-\*\/])\1+")
+        expression = pattern.sub(r"\1", expression)
+        return expression
 
 
     def to_postfix(self):
@@ -58,7 +69,7 @@ class LexicalAnalyzer:
             elif token == ")":
                 while stack and stack[-1] != "(":
                     postfix.append(stack.pop())
-                # "("를 만나면 pop
+                # "(" stack에서 제거
                 stack.pop()
             
             # 연산자 일 때에는 stack에 추가
@@ -70,31 +81,34 @@ class LexicalAnalyzer:
         while stack:
             postfix.append(stack.pop())
         
-        print(f"Postfix expression: {postfix}")
         return postfix
 
 
-def Calculate(tokens):
+def Calculate(expression):
     stack = []
-    for token in tokens:
-        if token == '+':
-            stack.append(stack.pop()+stack.pop())
-        elif token == '-':
-            stack.append(-(stack.pop()-stack.pop()))
-        elif token == '*':
-            stack.append(stack.pop()*stack.pop())
-        elif token == '/':
+    for token in expression:
+        if token.value == '+':
+            stack.append(Operand(stack.pop()+stack.pop()))
+        elif token.value == '-':
+            stack.append(Operand(stack.pop()-stack.pop()))
+        elif token.value == '*':
+            stack.append(Operand(stack.pop()*stack.pop()))
+        elif token.value == '/':
             rv = stack.pop()
-            stack.append(stack.pop()/rv)
+            stack.append(Operand(stack.pop()/rv))
         else:
-            stack.append(int(token))
+            stack.append(token)
     return stack.pop()
 
-# print(Calculate(["2", "3", "5", "*", "+", "7", "-"]))
+
+
+
+
+
 
 
 if __name__ == "__main__":
     calc = LexicalAnalyzer()
-    # calc.check_expression()
     post_expression = calc.to_postfix()
-    print(Calculate(post_expression))
+    print(f"Postfix expression: {post_expression}")
+    print(f"result: {Calculate(post_expression)}")
