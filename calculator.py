@@ -44,13 +44,6 @@ class LexicalAnalyzer:
         elif expression.count("(") != expression.count(")") or expression.find("(") > expression.find(")"):       # ") 1 + 2 (" 같은 경우 걸러지지 않음
             raise ExpressionError("Parentheses error")
 
-    def delete_overlap(expression):
-        """Delete overlap operator"""
-        pattern = re.compile(r"([\+\-\*\/])\1+")
-        expression = pattern.sub(r"\1", expression)
-        return expression
-
-
     def to_postfix(self):
         stack = []
         postfix = []
