@@ -1,14 +1,3 @@
-"""
-질문1. 여러 토큰 변수가 존재할 때 임시로 사용하는 토큰에 대한 변수를 지정하고 싶음. 
-    이 때 변수명은 tmp_token , token_tmp 어떤 것이 좋은 방법인가?
-    => 아무거나 사용하세요!
-질문2. Token의 판별은 Token class 내부에서 하는 것? --> 해결
-ㅠㅠㅠㅠㅠㅠㅠ
-"""
-
-
-# 더 여러가지 일을 해야 한다면?
-
 import re
 
 from tokens import Operand, Operator
