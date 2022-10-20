@@ -2,7 +2,7 @@
 연산자 (+, -, *, /)를 지원하는 후위 연산계산기
 
 
-- Input spec
+- Input specification
 <!-- input spec이나 test case를 상세히 촘촘하게 만들기
 이렇게는 안하겠지? No 다 만들어서 예외처리 -->
 
