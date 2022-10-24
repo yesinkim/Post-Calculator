@@ -17,7 +17,7 @@ class Operator(Base):
     def __init__(self, value):
         super().__init__(value)
         # 여기서 is_valid를 확인해야 함
-    
+
     @classmethod
     def is_valid(cls, value):
         return value in "+-*/"
@@ -33,16 +33,16 @@ class Operand(Base):
         super().__init__(value)
 
     def __add__(self, other):
-        return float(other.value) + float(self.value)
+        return Operand(float(self.value) + float(other.value))
 
     def __sub__(self, other):
-        return float(other.value) - float(self.value)
+        return Operand(float(self.value) - float(other.value))
 
     def __mul__(self, other):
-        return float(other.value) * float(self.value)
+        return Operand(float(self.value) * float(other.value))
 
     def __truediv__(self, other):
-        return float(other.value) / float(self.value)
+        return Operand(float(self.value) / float(other.value))
 
     @classmethod
     def is_valid(cls, value):

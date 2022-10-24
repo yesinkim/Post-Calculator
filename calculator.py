@@ -1,10 +1,10 @@
 import re
 
+from regex import P
+
 from tokens import Operand, Operator
+from exception import ExpressionError, ParenthesesError
 
-
-class ExpressionError(Exception):
-    pass
 
 
 class LexicalAnalyzer:
@@ -13,8 +13,9 @@ class LexicalAnalyzer:
     def __init__(self):
         # self.expression = "2.7 - 3 * (1+2)"        # temp test expression
         # self.expression = "2+2 + 4"
-        # self.expression = " 02 + 4 + 5"
-        self.expression = input("Enter an expression: ").replace(" ", "")
+        self.expression = " 02 * 04 - 04"
+        self.expression = "2.7 - 3(1+2)"
+        # self.expression = input("Enter an expression: ").replace(" ", "")
         self.check_expression()
 
     def check_expression(self):
@@ -35,8 +36,10 @@ class LexicalAnalyzer:
         elif expression.startswith(("*", "/", "+", "-", ")")) or expression.endswith(("*", "/", "+", "-", "(")):
             raise ExpressionError("Wrong expression")
 
-        elif expression.count("(") != expression.count(")") or expression.find("(") > expression.find(")"):       # ") 1 + 2 (" 같은 경우 걸러지지 않음
-            raise ExpressionError("Parentheses error")
+        elif expression.count("(") != expression.count(")") or expression.find("(") > expression.find(")"):       # ())()) -> 이런 거 어떻게 하실거에요 그러게요?...
+            raise ParenthesesError("Parentheses error")
+        
+        elif expression
 
     def to_postfix(self):
         """_summary_
@@ -80,19 +83,25 @@ def Calculate(expression):
     stack = []
 
     for token in expression:
+        if type(token) == Operand:
+            stack.append(token)
+            continue
+
+        op1, op2 = stack.pop(), stack.pop()
+
         if token.value == '+':
-            stack.append(Operand(stack.pop()+stack.pop()))
+            stack.append(op2 + op1)
 
         elif token.value == '-':
-            stack.append(Operand(stack.pop()-stack.pop()))
+            stack.append(op2 - op1)
 
         elif token.value == '*':
-            stack.append(Operand(stack.pop()*stack.pop()))
+            stack.append(op2 * op1)
 
         elif token.value == '/':
-            # 0으로 나눌 수 없음. -> Zero Division Error 발생 예외처리
-            rv = stack.pop()
-            stack.append(Operand(stack.pop()/rv))
+            if op1.value == 0:
+                raise ZeroDivisionError("Zero Division Error")
+            stack.append(op2 / op1)
 
         else:
             stack.append(token)
