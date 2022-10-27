@@ -16,7 +16,7 @@ class Base():
 class Operator(Base):
     def __init__(self, value):
         super().__init__(value)
-        # 여기서 is_valid를 확인해야 함
+        # 여기서 is_valid를 확인해야 함 -> 어떻게 해야 할 지 모르겠음...(calculator의 61번째 줄)
 
     @classmethod
     def is_valid(cls, value):

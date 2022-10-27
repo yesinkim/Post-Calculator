@@ -1,5 +1,11 @@
 # Post Calculator
-연산자 (+, -, *, /)를 지원하는 후위 연산계산기
+### **TODO list**
+**Google style Docstring, PEP8 권장**
+- [ ] token class 상세히 만들기
+- [ ] CFG 에 따라서 Tree class 만들기
+- [ ] CFG에 따라서 Parse Tree 그리기
+
+## 연산자 (+, -, *, /)를 지원하는 후위 연산계산기
 
 
 - Input specification

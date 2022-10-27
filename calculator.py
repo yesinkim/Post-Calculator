@@ -1,51 +1,69 @@
 import re
 
-from regex import P
-
 from tokens import Operand, Operator
-from exception import ExpressionError, ParenthesesError
-
+from exception import ExpressionError, ParenthesesError, OperatorError, OperandError
 
 
 class LexicalAnalyzer:
     """Find wrong expression and change expression to postfix"""
 
-    def __init__(self):
+    def __init__(self, expression=None):
+        """Initialize LexicalAnalyzer
+
+        Args:
+            expression (str): expression to calculate
+        """
+        self.expression = expression if expression else self.get_expression()
         # self.expression = "2.7 - 3 * (1+2)"        # temp test expression
         # self.expression = "2+2 + 4"
-        self.expression = " 02 * 04 - 04"
-        self.expression = "2.7 - 3(1+2)"
+        # self.expression = " 02 * 04 - 04"
+        # self.expression = "2.7 - (2 )-1)+(2"
         # self.expression = input("Enter an expression: ").replace(" ", "")
         self.check_expression()
 
-    def check_expression(self):
+    def get_expression(self):
+        self.expression = input("Enter an expression: ").replace(" ", "")
+        return self.expression
+
+    def check_expression(self) -> None:
+        """check expression is valid or not
+
+        Raises:
+            ExpressionError: When expression is not valid
+            OperatorError: Overlap operators
+            ParenthesesError: Parentheses are not matched
+        """
         expression = self.expression.replace(" ", "")
-        print(expression)
         pattern = re.compile("[^\d.\/\+\*\-\(\)]")
         pattern2 = re.compile(r"([\+\-\*\/])\1+")
 
-        if expression == "":
-            raise ExpressionError("Empty expression")       # error 세부화
-
-        elif pattern.search(expression):
+        if pattern.search(expression):
             raise ExpressionError("Unexpected character")
 
         elif pattern2.search(expression):
-            raise ExpressionError("Overlap operator")
+            raise OperatorError("Overlap operator")
 
         elif expression.startswith(("*", "/", "+", "-", ")")) or expression.endswith(("*", "/", "+", "-", "(")):
             raise ExpressionError("Wrong expression")
 
-        elif expression.count("(") != expression.count(")") or expression.find("(") > expression.find(")"):       # ())()) -> 이런 거 어떻게 하실거에요 그러게요?...
-            raise ParenthesesError("Parentheses error")
+        elif expression.count("(") != expression.count(")"):
+            raise ParenthesesError("Wrong parentheses match")
         
-        elif expression
+        elif expression.find("(") + expression.find(")") >= 0:
+            x = 0
+            for i in expression:
+                if i == "(":
+                    x += 1
+                elif i == ")":
+                    x -= 1
+                if x < 0:
+                    raise ParenthesesError("Wrong Parentheses")
 
-    def to_postfix(self):
-        """_summary_
+    def to_postfix(self) -> list:
+        """make expression to postfix
 
         Returns:
-            _type_: _description_
+            list: postfix expression list contains operand and operator objects
         """
         stack = []
         postfix = []
@@ -79,7 +97,12 @@ class LexicalAnalyzer:
         return postfix
 
 
-def Calculate(expression):
+def Calculate(expression) -> Operand:
+    """Calculate postfix expression
+    
+    Returns: 
+        Operand: result of expression
+    """
     stack = []
 
     for token in expression:
