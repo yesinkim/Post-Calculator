@@ -14,14 +14,10 @@ class LexicalAnalyzer:
             expression (str): expression to calculate
         """
         self.expression = expression if expression else self.get_expression()
-        # self.expression = "2.7 - 3 * (1+2)"        # temp test expression
-        # self.expression = "2+2 + 4"
-        # self.expression = " 02 * 04 - 04"
-        # self.expression = "2.7 - (2 )-1)+(2"
-        # self.expression = input("Enter an expression: ").replace(" ", "")
         self.check_expression()
 
     def get_expression(self):
+        """get expression from user"""
         self.expression = input("Enter an expression: ").replace(" ", "")
         return self.expression
 
@@ -30,12 +26,13 @@ class LexicalAnalyzer:
 
         Raises:
             ExpressionError: When expression is not valid
-            OperatorError: Overlap operators
-            ParenthesesError: Parentheses are not matched
+            OperatorError: When operators are overlapped
+            ParenthesesError: When Parentheses are not matched
+            OperandError: When points are overlapped
         """
         expression = self.expression.replace(" ", "")
         pattern = re.compile("[^\d.\/\+\*\-\(\)]")
-        pattern2 = re.compile(r"([\+\-\*\/])\1+")
+        pattern2 = re.compile(r"([\+\-\*\/]){2}")
 
         if pattern.search(expression):
             raise ExpressionError("Unexpected character")
@@ -58,6 +55,9 @@ class LexicalAnalyzer:
                     x -= 1
                 if x < 0:
                     raise ParenthesesError("Wrong Parentheses")
+
+        elif expression.find("..") >= 0:
+            raise OperandError("Double dot")
 
     def to_postfix(self) -> list:
         """make expression to postfix
@@ -97,7 +97,7 @@ class LexicalAnalyzer:
         return postfix
 
 
-def Calculate(expression) -> Operand:
+def calculate(expression) -> Operand:
     """Calculate postfix expression
     
     Returns: 
@@ -109,7 +109,9 @@ def Calculate(expression) -> Operand:
         if type(token) == Operand:
             stack.append(token)
             continue
-
+        
+        if len(stack) < 2:
+            stack.insert(0, Operand(0))
         op1, op2 = stack.pop(), stack.pop()
 
         if token.value == '+':
@@ -129,6 +131,8 @@ def Calculate(expression) -> Operand:
         else:
             stack.append(token)
 
+
+
     return stack.pop()
 
 
@@ -144,5 +148,5 @@ def Calculate(expression) -> Operand:
 if __name__ == "__main__":
     calc = LexicalAnalyzer()
     post_expression = calc.to_postfix()
-    print(f"Postfix expression: {post_expression}")
-    print(f"result: {Calculate(post_expression)}")
+    print(f"Postfix expression : {post_expression}")
+    print(f"result             : {calculate(post_expression)}")

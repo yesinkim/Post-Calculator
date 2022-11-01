@@ -2,11 +2,17 @@ class Base():
     def __init__(self, value):
         self.value = value
     
-    def __str__(self) -> str:
+    def __repr__(self) -> str:
         return str(self.value)
     
-    def __repr__(self):
+    def __call__(self):
         return self.value
+
+    def __eq__(self, other):
+        if type(other) == type(self):
+            return self.value == other.value
+        else:
+            return self.value == other
     
     @classmethod
     def is_valid(cls):
@@ -16,7 +22,6 @@ class Base():
 class Operator(Base):
     def __init__(self, value):
         super().__init__(value)
-        # 여기서 is_valid를 확인해야 함 -> 어떻게 해야 할 지 모르겠음...(calculator의 61번째 줄)
 
     @classmethod
     def is_valid(cls, value):
@@ -48,3 +53,11 @@ class Operand(Base):
     def is_valid(cls, value):
         value = value.replace(".", "")      # 소수점 처리
         return value.isdigit() or value.isnumeric()
+
+
+class LParen():
+    pass
+
+
+class RParen():
+    pass

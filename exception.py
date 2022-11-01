@@ -1,6 +1,3 @@
-from tkinter import E
-
-
 class ExpressionError(Exception):
     pass
 
