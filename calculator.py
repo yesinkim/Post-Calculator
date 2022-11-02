@@ -3,7 +3,6 @@ import re
 from tokens import Operand, Operator
 from exception import ExpressionError, ParenthesesError, OperatorError, OperandError
 
-
 class LexicalAnalyzer:
     """Find wrong expression and change expression to postfix"""
 
@@ -32,13 +31,16 @@ class LexicalAnalyzer:
         """
         expression = self.expression.replace(" ", "")
         pattern = re.compile("[^\d.\/\+\*\-\(\)]")
-        pattern2 = re.compile(r"([\+\-\*\/]){2}")
+        pattern2 = re.compile(r"([\+\-\*\/\(\)]){2}")
 
         if pattern.search(expression):
             raise ExpressionError("Unexpected character")
 
         elif pattern2.search(expression):
             raise OperatorError("Overlap operator")
+
+        elif re.search(r"[\+\-\*\/\(\)].*(-)[0-9]", expression):
+            raise OperandError("Negative number")
 
         elif expression.startswith(("*", "/", "+", "-", ")")) or expression.endswith(("*", "/", "+", "-", "(")):
             raise ExpressionError("Wrong expression")
