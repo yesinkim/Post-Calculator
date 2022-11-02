@@ -20,6 +20,16 @@ class LexicalAnalyzer:
         self.expression = input("Enter an expression: ").replace(" ", "")
         return self.expression
 
+    def tokenize(self):
+        """tokenize expression
+
+        Returns:
+            list: tokenized expression list contains operand and operator objects
+        """
+        return re.findall(r"[0-9.]+|[\+\-\*\/\(\)]", self.expression)
+
+
+
     def check_expression(self) -> None:
         """check expression is valid or not
 
