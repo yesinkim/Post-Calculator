@@ -13,21 +13,21 @@ class TestExpression(unittest.TestCase):
         ex2 = ")3 s* 4"
         ex3 = "2^3"
         with self.assertRaises(ExpressionError):
-            LexicalAnalyzer(ex).check_expression()
-            LexicalAnalyzer(ex2).check_expression()
-            LexicalAnalyzer(ex3).check_expression()
+            LexicalAnalyzer(ex)
+            LexicalAnalyzer(ex2)
+            LexicalAnalyzer(ex3)
 
     def test_parentheses_error(self):
         ex = "2.7-(2)+1)+(2"
         ex2 = "(1+2"
         with self.assertRaises(ParenthesesError):
-            LexicalAnalyzer(ex).check_expression()
-            LexicalAnalyzer(ex2).check_expression()
+            LexicalAnalyzer(ex)
+            LexicalAnalyzer(ex2)
 
     def test_operator_error(self):
         ex = "2.7 *- 3"
         with self.assertRaises(OperatorError):
-            LexicalAnalyzer(ex).check_expression()
+            LexicalAnalyzer(ex)
 
     def test_to_postfix(self):
         ex = "2.4 + 3 * 2"
@@ -46,7 +46,7 @@ class TestExpression(unittest.TestCase):
     def test_operand_error(self):
         ex = "2..3"
         with self.assertRaises(OperandError):
-            LexicalAnalyzer(ex).check_expression()
+            LexicalAnalyzer(ex)
 
 
 

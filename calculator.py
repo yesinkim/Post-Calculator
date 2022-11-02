@@ -100,20 +100,6 @@ class LexicalAnalyzer:
 
 
 
-class Parser():
-    def __init__(self):
-        self.lexical_analyzer = LexicalAnalyzer()
-
-    def parse(self):
-        pass
-
-
-
-class Caculator():
-    def __init__(self):
-        pass
-        
-
 def calculate(expression) -> Operand:
     """Calculate postfix expression
     
