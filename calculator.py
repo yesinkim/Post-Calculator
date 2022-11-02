@@ -31,7 +31,7 @@ class LexicalAnalyzer:
         """
         expression = self.expression.replace(" ", "")
         pattern = re.compile("[^\d.\/\+\*\-\(\)]")
-        pattern2 = re.compile(r"([\+\-\*\/\(\)]){2}")
+        pattern2 = re.compile(r"([\+\-\*\/]){2}")
 
         if pattern.search(expression):
             raise ExpressionError("Unexpected character")
@@ -99,9 +99,26 @@ class LexicalAnalyzer:
         return postfix
 
 
+
+class Parser():
+    def __init__(self):
+        self.lexical_analyzer = LexicalAnalyzer()
+
+    def parse(self):
+        pass
+
+
+
+class Caculator():
+    def __init__(self):
+        pass
+        
+
 def calculate(expression) -> Operand:
     """Calculate postfix expression
     
+    Returns: 
+Returns: 
     Returns: 
         Operand: result of expression
     """

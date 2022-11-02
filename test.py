@@ -18,7 +18,7 @@ class TestExpression(unittest.TestCase):
             LexicalAnalyzer(ex3).check_expression()
 
     def test_parentheses_error(self):
-        ex = "2.7 - (2 )-1)+(2"
+        ex = "2.7-(2)+1)+(2"
         ex2 = "(1+2"
         with self.assertRaises(ParenthesesError):
             LexicalAnalyzer(ex).check_expression()

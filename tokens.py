@@ -22,20 +22,20 @@ class Base():
 class Operator(Base):
     def __init__(self, value):
         super().__init__(value)
-        if self.value == '(':
-            return LParen(self.value)
-        elif self.value == ')':
-            return RParen(self.value)
-        elif self.value == '+':
-            return Plus(self.value)
-        elif self.value == '-':
-            return Minus(self.value)
-        elif self.value == '*':
-            return Multiply(self.value)
-        elif self.value == '/':
-            return Divide(self.value)
-        else:
-            raise ValueError(f'Invalid operator: {self.value}')
+        # if self.value == '(':
+        #     return LParen(self.value)
+        # elif self.value == ')':
+        #     return RParen(self.value)
+        # elif self.value == '+':
+        #     return Plus(self.value)
+        # elif self.value == '-':
+        #     return Minus(self.value)
+        # elif self.value == '*':
+        #     return Multiply(self.value)
+        # elif self.value == '/':
+        #     return Divide(self.value)
+        # else:
+        #     raise ValueError(f'Invalid operator: {self.value}')
 
 
     @classmethod
@@ -46,7 +46,6 @@ class Operator(Base):
     def check_priority(cls, value):
         priority = {'+':1, '-':1, '*':2, '/':2}
         return priority[str(value)]
-
 
 
 class Operand(Base):
@@ -85,14 +84,27 @@ class Plus(Operator):
     def __init__(self, value):
         super().__init__(value)
 
+    def operate(self, operand1, operand2):
+        return operand1 + operand2
+
 class Minus(Operator):
     def __init__(self, value):
         super().__init__(value)
+
+    def operate(self, operand1, operand2):
+        return operand1 - operand2
         
 class Multiply(Operator):
     def __init__(self, value):
         super().__init__(value)
 
+    def operate(self, operand1, operand2):
+        return operand1 * operand2
+
+
 class Divide(Operator):
     def __init__(self, value):
         super().__init__(value)
+
+    def operate(self, operand1, operand2):
+        return operand1 / operand2
