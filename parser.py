@@ -6,6 +6,7 @@ from exceptions import InvalidExpressionError, InvalidTokenError
 from tree import BaseTree, EnclosedTree, ExpressionTree, FactorTree, FactorsTree, IncrementsTree, ScalingTree, TermTree
 
 class CalculatorParser():
+    """Parse expression and show and calculate the result"""
     def __init__(self):
         pass
 
@@ -25,8 +26,10 @@ class CalculatorParser():
             else:
                 raise InvalidTokenError(f"{expression} is not a valid token")
 
+        return tokens
+
     def parse(self, expression: str):
-        self.tokens = self.tokenize(expression)
+        self.tokens = iter(self.tokenize(expression))
         self.current_token = next(self.tokens, None)
         self.next_token = next(self.tokens, None)
 
@@ -34,8 +37,8 @@ class CalculatorParser():
 
         return result
 
-    def is_accept(self, token_type: str) -> bool:
-        return self.current_token.type == token_type
+    def is_accept(self, type: str) -> bool:
+        return self.current_token.type == type
 
     def advance(self):
         self.current_token = self.next_token
