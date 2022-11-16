@@ -22,12 +22,26 @@ class BaseTree:
             raise FullTreeError("Tree is full")
 
     def print_tree(self, idx: int = 0) -> None:
-        print(f"{idx}: {'-'*idx}>  {self.root}")
+        print(f"{idx}: {'-'*idx}|  {self.root}")
         if self.left is not None:
             self.left.print_tree(idx+1)
 
         if self.right is not None:
             self.right.print_tree(idx+1)
+
+    def print_tree_(self, idx: int = 0) -> None:
+        print(f"{idx}: |{'--'*idx}  {self.root}")
+        if self.left:
+            if isinstance(self.left, BaseToken):
+                print(f"{idx+1}: `{'--'*(idx+1)}> {self.left}")
+            else:
+                self.left.print_tree_(idx + 1)
+
+        if self.right:
+            # if isinstance(self.right, BaseToken):
+            #     print(f"{idx+1}: {'--'*(idx+1)}>  {self.right}")
+            # else:
+            self.right.print_tree_(idx + 1)
 
     def evaluate(self) -> float:
         result = self.traverse()
@@ -44,19 +58,20 @@ class BaseTree:
                 result += [self.left.value]
 
             else:   # NonTerminalToken
+                print(self.left)
                 result += self.left.traverse()
 
-        if self.right:
-            if isinstance(self.right, NumberToken):
-                result += [float(self.right.value)]
+            if self.right:
+                if isinstance(self.right, NumberToken):
+                    result += [float(self.right.value)]
 
-            elif isinstance(self.right, OperatorToken):
-                result += [self.right.value]
+                elif isinstance(self.right, OperatorToken):
+                    result += [self.right.value]
 
-            else:
-                result += self.right.traverse()
+                else:
+                    result += self.right.traverse()
         
-        print(f"{self.data}: {result}")
+        print(f"{self.root}: {result}")
         return self.calculate(result)
 
     def calculate(self, expression):
@@ -82,11 +97,12 @@ class EnclosedTree(BaseTree):
 
 class ScalingsTree(BaseTree):
     """Scalings -> Scaling Scalings | epsilon
+    0. [epsilon]: 빈 문자열
     1. [숫자, *, /, 숫자]
     2. [*, / , 숫자]
     """
-    def __init__(self, data: BaseToken):
-        super().__init__(data)
+    def __init__(self, root: BaseToken):
+        super().__init__(root)
         self.binary_calculte_map = {"*": mul, "/": truediv}
 
     def calculate(self, expression):
@@ -124,9 +140,10 @@ class IncrementsTree(BaseTree):
     1. [+ -, 숫자]
     2. [+ -, 숫자, + -, 숫자]=> [+ -, 숫자]
     """
-    def __init__(self, data: BaseToken) -> None:
-        super().__init__(data)
+    def __init__(self, root: BaseToken) -> None:
+        super().__init__(root)
         self.binary_calculte_map = {"+": add, "-": sub}
+
     def calculate(self, expression):
         if len(expression) == 4:
             result = self.binary_calculte_map[expression[2]](expression[1], expression[3])

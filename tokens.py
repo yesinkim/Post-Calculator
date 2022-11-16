@@ -58,8 +58,6 @@ class OperatorToken(BaseToken):
         else:
             raise InvalidTokenError(f"{value} is not {self.__class__}")
 
-
-
 class ParenToken(BaseToken):
     @classmethod
     def is_valid(cls, value: str)-> bool:
@@ -69,11 +67,12 @@ class ParenToken(BaseToken):
     def select_token(self, value: str) -> str:
         if value == "(":
             return "LParen"
+
         elif value == ")":
             return "RParen"
+
         else:
             raise InvalidTokenError(f"{value} is not {self.__class__.__name__}")
-
 
 class NonTerminalToken():
     def __init__(self, type: str):

@@ -1,9 +1,14 @@
-from typing import List
 import re
+from typing import List
 
-from tokens import BaseToken, NonTerminalToken, NumberToken, OperatorToken, ParenToken
 from exceptions import InvalidExpressionError, InvalidTokenError
-from tree import BaseTree, EnclosedTree, ExpressionTree, FactorTree, FactorsTree, IncrementsTree, ScalingTree, TermTree
+from tokens import (BaseToken, NonTerminalToken, NumberToken, OperatorToken,
+                    ParenToken)
+from tree import (BaseTree, EnclosedTree, ExpressionTree, FactorsTree,
+                  
+                  FactorTree, IncrementsTree, IncrementTree, ScalingsTree,
+                  ScalingTree, TermTree)
+
 
 class CalculatorParser():
     """Parse expression and show and calculate the result"""
@@ -11,6 +16,7 @@ class CalculatorParser():
         pass
 
     def tokenize(self, expression: str) -> List[BaseToken]:
+        """parse the expression and return list consist of token"""
         tokens = []
         split_expression = re.findall(r"[0-9.]+|[\+\-\*\/\(\)]", expression)
         for token in split_expression:
@@ -25,7 +31,6 @@ class CalculatorParser():
                 
             else:
                 raise InvalidTokenError(f"{expression} is not a valid token")
-
         return tokens
 
     def parse(self, expression: str):
@@ -34,11 +39,10 @@ class CalculatorParser():
         self.next_token = next(self.tokens, None)
 
         result = self.expression()
-
         return result
 
     def is_accept(self, type: str) -> bool:
-        return self.current_token.type == type
+        return self.current_token and self.current_token.type == type
 
     def advance(self):
         self.current_token = self.next_token
@@ -70,12 +74,12 @@ class CalculatorParser():
             tree.insert(self.factor())
 
         else:
-            raise InvalidExpressionError(f"Should not arrive here{self.current_token}")
+            raise InvalidExpressionError(f"Should not arrive here {self.current_token}")
         return tree
 
     def factor(self) -> FactorTree:
         """Factor -> Number | Enclosed"""
-        tree = FactorsTree(NonTerminalToken("Factor"))
+        tree = FactorTree(NonTerminalToken("Factor"))
         if self.is_accept("Number"):
             tree.insert(self.current_token)
             self.advance()      # advance to next token
@@ -84,7 +88,7 @@ class CalculatorParser():
             tree.insert(self.enclosed())
         
         else:
-            raise InvalidExpressionError(f"Should not arrive here{self.current_token}")
+            raise InvalidExpressionError(f"Should not arrive here {self.current_token}")
         return tree
 
     def enclosed(self) -> ExpressionTree:
@@ -97,12 +101,12 @@ class CalculatorParser():
             self.advance()
 
         else:
-            raise InvalidExpressionError(f"Should not arrive here{self.current_token}")
+            raise InvalidExpressionError(f"Should not arrive here {self.current_token}")
         return expr_value
 
-    def scalings(self) -> ScalingTree:
+    def scalings(self) -> ScalingsTree:
         """Scalings -> Scalings Scaling | epsilon"""
-        tree = ScalingTree(NonTerminalToken("Scalings"))
+        tree = ScalingsTree(NonTerminalToken("Scalings"))
         if self.is_accept("Mul") or self.is_accept("Div"):
             tree.insert(self.scaling())
             tree.insert(self.scalings())
@@ -132,10 +136,10 @@ class CalculatorParser():
             tree.insert(self.increments())
         return tree
 
-    def increment(self) -> IncrementsTree:
+    def increment(self) -> IncrementTree:
         """Increment -> AddOp Term"""
         if self.is_accept("Add") or self.is_accept("Sub"):
-            tree = IncrementsTree(NonTerminalToken("Increment"))
+            tree = IncrementTree(NonTerminalToken("Increment"))
             tree.insert(self.add_operator())
             tree.insert(self.term())
             return tree
