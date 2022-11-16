@@ -9,8 +9,8 @@
 """
 import unittest
 
-from calculate_parser import CalculatorParser
-from exceptions import InvalidExpression
+from parser import CalculatorParser
+from exceptions import InvalidExpressionError
 from tokens import NumberToken, OperatorToken
 
 
@@ -23,7 +23,7 @@ class ParserTest(unittest.TestCase):
     def test_raise_error(self):
         operator_error = ["1+2+", "1+*2"]
         point_error = ['.3']
-        with self.assertRaises(InvalidExpression):
+        with self.assertRaises(InvalidExpressionError):
             for case in operator_error:
                 self.parser.tokenize(case)
 
